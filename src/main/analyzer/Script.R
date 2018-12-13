@@ -4,6 +4,26 @@ source("eksplo.R")
 library(RODBC)
 library(rmarkdown)
 
+
+
+require("RPostgreSQL")
+
+pw <- getPass::getPass("Enter the password: ")
+drv <- dbDriver("PostgreSQL")
+con <- dbConnect(drv, dbname = "postgres",
+                 host = "localhost", port = 5432,
+                 user = "postgres", password = pw)
+rm(pw)
+
+# check for the cartable
+dbExistsTable(con, "cartable")
+# TRUE
+
+# query the data from postgreSQL 
+df_postgres <- dbGetQuery(con, "SELECT * from category")
+
+
+
 Sys.setenv(RSTUDIO_PANDOC="C:/Program Files/RStudio/bin/pandoc")
   myconn <- odbcConnect("allegro", uid = "Tieburach", pwd = "")
 
