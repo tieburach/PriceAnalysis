@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544640519678.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1397363172",
+    "id" : "BF200672",
+    "lastKnownWriteTime" : 1544640534,
+    "last_content_update" : -2147483648,
+    "path" : "C:/Users/Tieburach/demo/src/main/analyzer/Script.R",
+    "project_path" : "Script.R",
+    "properties" : {
+        "cursorPosition" : "13,25",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

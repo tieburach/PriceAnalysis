@@ -1,0 +1,128 @@
+---
+title: "Raport"
+output:
+  word_document: default
+  html_document: default
+params:
+    directory:
+        value: x
+    categorytree:
+        value: y
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Raport z analizy danych z kategorii i w czasie:
+
+```{r echo=FALSE}
+params$categorytree
+date()
+
+```
+
+
+# 2. Przygotowanie danych
+
+Najpierw zosta³ przeprowadzony etap czyszczenia danych z wartoœci b³êdnych i odrzucaniem punktów oddalonych (wiêkszych ni¿ 3-krotnoœæ odchylenia standardowego od wartoœci œredniej).
+Na poni¿szej grafice znajdziemy wykres pokazuj¹cy te punkty:
+
+## a) dla parametru
+
+```{r echo=FALSE}
+  md1oind = abs(parameters - mean(parameters)) < 3*sd(parameters)
+  plot(parameters,z1,pch=16,col=md1oind+1)
+  title("Punkty oddalone dla parametru")
+```
+
+
+## b) dla ceny
+
+```{r echo=FALSE}
+  prices <- pundat[,c("price")]
+  md2oind = abs(prices - mean(prices)) < 3*sd(prices)
+  plot(prices,z1,pch=16,col=md2oind+1)
+  title("Punkty oddalone dla parametru")
+```
+
+
+# 3. Histogramy, tablice rozk³adu wyst¹pieñ
+## a) dla ceny, przed transformacj¹
+```{r echo=FALSE}
+  hist(prices)
+```
+
+## b) dla ceny, po transformacji
+
+```{r echo=FALSE}
+  hist(pricereduced)
+```
+
+## c) dla parametrów przed transformacj¹
+
+```{r echo=FALSE}
+hist (parameters)
+```
+
+## d) dla parametrów po transformacji
+
+```{r echo=FALSE}
+hist (parametersreduced)
+```
+
+
+# 4. Grupowanie danych
+
+Grupowanie danych przebiega³o za pomoc¹ metody k-œrednich, s³u¿y znalezieniu grup potencjalnej konkurencji w sprzeda¿y, jak i ogólnemu zarysowaniu rynku i licznoœci grup.
+
+```{r echo=FALSE}
+  par(mfcol=c(1,1))
+  pundatreduced<- data.frame(pricereduced, parametersreduced)
+  g <-grupuj("ksrednich",pundatreduced,4,c(2,1),1)
+  
+```
+
+# 5. Selekcja cen potencjalnych
+
+Na poni¿szym wykresie znajdziemy rozk³ad normalny po transformacji oraz zaznaczone punkty, które zosta³y wyliczone jako wartoœci potencjalnie istotne dla u¿ytkownika.
+
+```{r echo=FALSE, cache=FALSE, results=FALSE, warning=FALSE, comment=FALSE, warning=FALSE}
+  prices <- sort (prices)
+  plot(prices, y, col=ifelse(prices==cenaminwykres | prices==cenaavgwykres | prices==cenamaxwykres, "red", "white"))
+  lines(prices, y)
+  title(main="Rozklad normalny z zaznaczonymi programi")
+```
+
+# 6. Wartoœci cen potencjalncych
+
+Zosta³y wyliczone nastêpuj¹ce wartoœci dla cen jako wartoœci przewidywalne:
+
+### a) Wartoœæ minimalna
+
+```{r echo=FALSE}
+cenamin
+```
+
+Wartoœæ, dla której przedmiot aukcji sprzeda sie b³yskawicznie, w tej kategorii cenowej jest najwiêkszy popyt na wybrany rodzaj produktu. Wi¹¿e siê to jednak ze stosunkowo ma³ym zarobkiem.
+
+### b) wartoœæ potencjalnie najlepsza
+
+```{r echo=FALSE}
+cenaavg
+```
+
+Jest to wartoœæ, która gwarantuje sprzeda¿ produktu, nie w czasie b³yskawicznym, ale po odczekaniu pewnej chwili oraz posiada wiêkszy zysk ni¿ wartoœæ pierwsza, jest to wartoœæ najrozs¹dniejsza dla kupca, je¿eli nie zale¿y mu tak bardzo na b³yskawicznej sprzeda¿y, ale chce byæ pewny ¿e przedmiot zostanie przez kogoœ kupiony.
+
+### c) wartoœæ z ryzykiem
+
+```{r echo=FALSE}
+cenamax
+```
+
+Po wystawieniu do tej ceny, istnieje jeszcze szansa, ¿e nasz produkt siê sprzeda. Jednak bêdzie to zapewne wi¹za³o siê z d³ugim czasem oczekiwania na sprzeda¿ produktu, oraz nie mamy zagwarantowane, ¿e tak bêdzie. Powy¿ej tej kwoty jest bardzo ciê¿ko sprzedaæ produkt.
+
+
+
+
+
