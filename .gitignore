@@ -11,6 +11,9 @@
 .sts4-cache
 
 ### IntelliJ IDEA ###
+.Rhistory
+*.Rproj.user
+*.Rproj
 .idea
 *.iws
 *.iml
