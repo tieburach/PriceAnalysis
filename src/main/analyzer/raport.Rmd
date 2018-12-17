@@ -25,8 +25,8 @@ date()
 
 # 2. Przygotowanie danych
 
-Najpierw zosta³ przeprowadzony etap czyszczenia danych z wartoœci b³êdnych i odrzucaniem punktów oddalonych (wiêkszych ni¿ 3-krotnoœæ odchylenia standardowego od wartoœci œredniej).
-Na poni¿szej grafice znajdziemy wykres pokazuj¹cy te punkty:
+Najpierw zostaÅ‚ przeprowadzony etap czyszczenia danych z wartoÅ›ci bÅ‚Ä™dnych i odrzucaniem punktÃ³w oddalonych (wiÄ™kszych niÅ¼ 3-krotnoÅ›Ä‡ odchylenia standardowego od wartoÅ›ci Å›redniej).
+Na poniÅ¼szej grafice znajdziemy wykres pokazujÄ…cy te punkty:
 
 ## a) dla parametru
 
@@ -40,15 +40,15 @@ Na poni¿szej grafice znajdziemy wykres pokazuj¹cy te punkty:
 ## b) dla ceny
 
 ```{r echo=FALSE}
-  prices <- pundat[,c("price")]
+  prices <- auctions[,c("price")]
   md2oind = abs(prices - mean(prices)) < 3*sd(prices)
   plot(prices,z1,pch=16,col=md2oind+1)
   title("Punkty oddalone dla parametru")
 ```
 
 
-# 3. Histogramy, tablice rozk³adu wyst¹pieñ
-## a) dla ceny, przed transformacj¹
+# 3. Histogramy, tablice rozkÅ‚adu wystÄ…pieÅ„
+## a) dla ceny, przed transformacjÄ…
 ```{r echo=FALSE}
   hist(prices)
 ```
@@ -59,13 +59,13 @@ Na poni¿szej grafice znajdziemy wykres pokazuj¹cy te punkty:
   hist(pricereduced)
 ```
 
-## c) dla parametrów przed transformacj¹
+## c) dla parametrÃ³w przed transformacjÄ…
 
 ```{r echo=FALSE}
 hist (parameters)
 ```
 
-## d) dla parametrów po transformacji
+## d) dla parametrÃ³w po transformacji
 
 ```{r echo=FALSE}
 hist (parametersreduced)
@@ -74,18 +74,18 @@ hist (parametersreduced)
 
 # 4. Grupowanie danych
 
-Grupowanie danych przebiega³o za pomoc¹ metody k-œrednich, s³u¿y znalezieniu grup potencjalnej konkurencji w sprzeda¿y, jak i ogólnemu zarysowaniu rynku i licznoœci grup.
+Grupowanie danych przebiegaÅ‚o za pomocÄ… metody k-Å›rednich, sÅ‚uÅ¼y znalezieniu grup potencjalnej konkurencji w sprzedaÅ¼y, jak i ogÃ³lnemu zarysowaniu rynku i licznoÅ›ci grup.
 
 ```{r echo=FALSE}
   par(mfcol=c(1,1))
-  pundatreduced<- data.frame(pricereduced, parametersreduced)
-  g <-grupuj("ksrednich",pundatreduced,4,c(2,1),1)
+  auctionsreduced<- data.frame(pricereduced, parametersreduced)
+  g <-grupuj("ksrednich",auctionsreduced,4,c(2,1),1)
   
 ```
 
 # 5. Selekcja cen potencjalnych
 
-Na poni¿szym wykresie znajdziemy rozk³ad normalny po transformacji oraz zaznaczone punkty, które zosta³y wyliczone jako wartoœci potencjalnie istotne dla u¿ytkownika.
+Na poniÅ¼szym wykresie znajdziemy rozkÅ‚ad normalny po transformacji oraz zaznaczone punkty, ktÃ³re zostaÅ‚y wyliczone jako wartoÅ›ci potencjalnie istotne dla uÅ¼ytkownika.
 
 ```{r echo=FALSE, cache=FALSE, results=FALSE, warning=FALSE, comment=FALSE, warning=FALSE}
   prices <- sort (prices)
@@ -94,35 +94,30 @@ Na poni¿szym wykresie znajdziemy rozk³ad normalny po transformacji oraz zaznaczo
   title(main="Rozklad normalny z zaznaczonymi programi")
 ```
 
-# 6. Wartoœci cen potencjalncych
+# 6. WartoÅ›ci cen potencjalncych
 
-Zosta³y wyliczone nastêpuj¹ce wartoœci dla cen jako wartoœci przewidywalne:
+ZostaÅ‚y wyliczone nastÄ™pujÄ…ce wartoÅ›ci dla cen jako wartoÅ›ci przewidywalne:
 
-### a) Wartoœæ minimalna
+### a) WartoÅ›Ä‡ minimalna
 
 ```{r echo=FALSE}
 cenamin
 ```
 
-Wartoœæ, dla której przedmiot aukcji sprzeda sie b³yskawicznie, w tej kategorii cenowej jest najwiêkszy popyt na wybrany rodzaj produktu. Wi¹¿e siê to jednak ze stosunkowo ma³ym zarobkiem.
+WartoÅ›Ä‡, dla ktÃ³rej przedmiot aukcji sprzeda sie bÅ‚yskawicznie, w tej kategorii cenowej jest najwiÄ™kszy popyt na wybrany rodzaj produktu. WiÄ…Å¼e siÄ™ to jednak ze stosunkowo maÅ‚ym zarobkiem.
 
-### b) wartoœæ potencjalnie najlepsza
+### b) WartoÅ›Ä‡ potencjalnie najlepsza
 
 ```{r echo=FALSE}
 cenaavg
 ```
 
-Jest to wartoœæ, która gwarantuje sprzeda¿ produktu, nie w czasie b³yskawicznym, ale po odczekaniu pewnej chwili oraz posiada wiêkszy zysk ni¿ wartoœæ pierwsza, jest to wartoœæ najrozs¹dniejsza dla kupca, je¿eli nie zale¿y mu tak bardzo na b³yskawicznej sprzeda¿y, ale chce byæ pewny ¿e przedmiot zostanie przez kogoœ kupiony.
+Jest to wartoÅ›Ä‡, ktÃ³ra gwarantuje sprzedaÅ¼ produktu, nie w czasie bÅ‚yskawicznym, ale po odczekaniu pewnej chwili oraz posiada wiÄ™kszy zysk niÅ¼ wartoÅ›Ä‡ pierwsza, jest to wartoÅ›Ä‡ najrozsÄ…dniejsza dla kupca, jeÅ¼eli nie zaleÅ¼y mu tak bardzo na bÅ‚yskawicznej sprzedaÅ¼y, ale chce byÄ‡ pewny Å¼e przedmiot zostanie przez kogoÅ› kupiony.
 
-### c) wartoœæ z ryzykiem
+### c) WartoÅ›Ä‡ z ryzykiem
 
 ```{r echo=FALSE}
 cenamax
 ```
 
-Po wystawieniu do tej ceny, istnieje jeszcze szansa, ¿e nasz produkt siê sprzeda. Jednak bêdzie to zapewne wi¹za³o siê z d³ugim czasem oczekiwania na sprzeda¿ produktu, oraz nie mamy zagwarantowane, ¿e tak bêdzie. Powy¿ej tej kwoty jest bardzo ciê¿ko sprzedaæ produkt.
-
-
-
-
-
+Po wystawieniu do tej ceny, istnieje jeszcze szansa, Å¼e nasz produkt siÄ™ sprzeda. Jednak bÄ™dzie to zapewne wiÄ…zaÅ‚o siÄ™ z dÅ‚ugim czasem oczekiwania na sprzedaÅ¼ produktu, oraz nie mamy zagwarantowane, Å¼e tak bÄ™dzie. PowyÅ¼ej tej kwoty jest bardzo ciÄ™Å¼ko sprzedaÄ‡ produkt.
