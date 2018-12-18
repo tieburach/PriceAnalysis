@@ -9,5 +9,5 @@ import java.util.List;
 public interface CategoryRepository extends CrudRepository <Category, Long> {
 
     List<Category> findByParentid(Long parentid);
-
+    Category findById(long id);
 }

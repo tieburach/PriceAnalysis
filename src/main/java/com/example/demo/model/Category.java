@@ -8,8 +8,20 @@ public class Category {
 
     @Id
     private Long id;
-
     private String name;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Long getParentid() {
+        return parentid;
+    }
+
     private Long parentid;
 
     protected Category(){}

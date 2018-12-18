@@ -17,6 +17,15 @@ public class Auction {
     private String secondparameterunit;
     private String name;
 
+    public Auction(Long id, Float price, String firstparametername, Float firstparametervalue, String firstparameterunit, String name) {
+        this.id = id;
+        this.price = price;
+        this.firstparametername = firstparametername;
+        this.firstparametervalue = firstparametervalue;
+        this.firstparameterunit = firstparameterunit;
+        this.name = name;
+    }
+
     public Auction() {
     }
 
