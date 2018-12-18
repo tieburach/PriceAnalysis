@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/bootstrap.min.css"/>
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css"/>
+</head>
+<body>
+
+<th:block th:include="/navbar"></th:block>
+
+<div class="container">
+
+    <div class="center">
+        <form th:action="@{/single}" th:object="${categoryText}" method="post">
+            <div class="margins">
+                <input type="text" id="categoryNumber" name="categoryNumber"/>
+            </div>
+            <div class="margins">
+                <button type="submit" class="btn-success">Zatwierdź kategorię</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
