@@ -4,10 +4,16 @@
 </head>
 <body>
 <th:block th:include="/navbar"></th:block>
-<div class="container">
-    <div class="starter-template center margins">
-        Logo jakies
-    </div>
+<div class="starter-template center backgroundgradient">
+    <h1 class="centerText">PriceAnalysis</h1>
+    <h3 class="centerText2">Witaj w aplikacji do analizy cenowej produktów bazującej na danych pobranych dzięki Allegro API.</h3>
+    <a class="btn btn-danger btn-lg centerText3" th:href="@{/single}">Zaczynajmy!</a>
+</div>
+<div>
+    <img class="imageLogoFirst"
+         src="https://www.ee.pw.edu.pl/wp-content/uploads/2016/11/WE-znak.png"/>
+    <img class="imageLogoSecond"
+         src="https://brandingmonitor.pl/wp-content/uploads/2016/11/podstawowa-wersja-nowego-logo-politechniki-warszawskiej.png"/>
 </div>
 </body>
 </html>

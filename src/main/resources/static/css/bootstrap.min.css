@@ -4,7 +4,7 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  *//*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 html {
-    font-family: sans-serif;
+    font-family: Calibri;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%
 }
@@ -1351,7 +1351,7 @@ html {
 }
 
 body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Calibri;
     font-size: 20px;
     line-height: 1.42857143;
     color: #333;
@@ -4498,7 +4498,7 @@ select[multiple].input-group-sm > .form-control, select[multiple].input-group-sm
 .navbar {
     position: relative;
     min-height: 50px;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
     border: 4px solid transparent
 }
 
@@ -6406,7 +6406,7 @@ button.close {
     position: absolute;
     z-index: 1070;
     display: block;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Calibri;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -6540,7 +6540,7 @@ button.close {
     display: none;
     max-width: 276px;
     padding: 1px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: Calibri;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
@@ -6831,7 +6831,7 @@ button.close {
 .carousel-control .icon-next, .carousel-control .icon-prev {
     width: 20px;
     height: 20px;
-    font-family: serif;
+    font-family: Calibri;
     line-height: 1
 }
 
@@ -7208,17 +7208,3 @@ button.close {
     }
 }
 
-.center {
-    font-size: 30px;
-    position: absolute;
-    width: 400px;
-    height: 200px;
-    z-index: 15;
-    top: 50%;
-    left: 50%;
-    margin: -100px 0 0 -150px;
-}
-
-.margins{
-    margin: 30px;
-}

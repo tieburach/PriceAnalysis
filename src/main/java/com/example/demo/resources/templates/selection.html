@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css"/>
 </head>
 <body>
 
@@ -17,7 +19,9 @@
                         th:value="${parameter.index}"
                         th:text="${parameter.name}"></option>
             </select>
-            <button type="submit" class="btn-success">Zatwierdz parametr</button>
+            <div class="margins">
+                <button type="submit" class="btn-success">Zatwierdz parametr</button>
+            </div>
         </div>
     </form>
 </div>

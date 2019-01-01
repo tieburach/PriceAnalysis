@@ -7,14 +7,17 @@ library(getPass)
 require("RPostgreSQL")
 require(knitr) # required for knitting from rmd to md
 require(markdown) # required for md to html 
-
+Sys.setenv(RSTUDIO_PANDOC="C:/Program Files/RStudio/bin/pandoc")
 
 pw <- getPass::getPass("Enter the password: ")
+
 drv <- dbDriver("PostgreSQL")
 con <- dbConnect(drv, dbname = "postgres",
                  host = "localhost", port = 5432,
                  user = "postgres", password = pw)
 rm(pw)
+
+odchstandard = 3 
 
 
 # query the data from postgreSQL 
@@ -22,6 +25,7 @@ auctions <- dbGetQuery(con, "SELECT * from auction")
 prices <- auctions[,c("price")]
 parameters <- auctions[,c("firstparametervalue")]
 
+dbSendQuery(con, "DELETE FROM results")
 
 prices <- sort (prices)
 y <- dnorm(prices, mean=mean(prices), sd = sd(prices))
@@ -29,14 +33,8 @@ cenamin <- mean(prices) - sd(prices)
 cenaavg <- mean(prices)
 cenamax <- mean(prices) + sd(prices)
 
-#query <- paste("INSERT INTO AllegroDatabase.dbo.Results (price) VALUES ( ", cenamin, ")")
-#sqlQuery(myconn, query)  
-#query <- paste("INSERT INTO AllegroDatabase.dbo.Results (price) VALUES ( ", cenaavg, ")")
-#sqlQuery(myconn, query)  
-#query <- paste("INSERT INTO AllegroDatabase.dbo.Results (price) VALUES ( ", cenamax, ")")
-#sqlQuery(myconn, query)  
-#outputfolder <- "jeszczejeden"
 categorytree <- "Tutaj bedzie drzewko wywolan kategorii"
+#outputfolder <- "test"
 outputfolder <- args[1]
 #categorytree <- args[2]
 maindir <- "C:/Users/Tieburach/Desktop/"
@@ -44,10 +42,21 @@ togetherdir <- paste(maindir, outputfolder, sep="")
 dir.create(file.path(maindir, outputfolder), showWarnings = FALSE)
 setwd(file.path(maindir, outputfolder))
 
+#wyliczenie cen istniejacych aukcji
 cenaminwykres <- prices[which(abs(prices-cenamin)==min(abs(prices-cenamin)))]
 cenaavgwykres <- prices[which(abs(prices-cenaavg)==min(abs(prices-cenaavg)))]
 cenamaxwykres <- prices[which(abs(prices-cenamax)==min(abs(prices-cenamax)))]
- 
+
+
+#wrzucenie do tabeli z rezultatami
+query <- paste("INSERT INTO results (price, id) VALUES ( ", cenaminwykres, ", 1)")
+dbSendQuery(con, query)
+query <- paste("INSERT INTO results (price, id) VALUES ( ", cenaavgwykres, ", 2)")
+dbSendQuery(con, query)
+query <- paste("INSERT INTO results (price, id) VALUES ( ", cenamaxwykres, ", 3)")
+dbSendQuery(con, query)
+
+
 #rysowanie rozkladu normalnego z zaznaczonymi programi
 png("rozkladnormalny.png")
 plot(prices, y, col=ifelse(prices==cenaminwykres | prices==cenaavgwykres | prices==cenamaxwykres, "red", "white"))
@@ -61,23 +70,23 @@ z1 <- 1:z
 
 #punkty oddalone dla parametru
 png("oddaloneparametr.png")
-md1oind = abs(parameters - mean(parameters)) < 3*sd(parameters)
+md1oind = abs(parameters - mean(parameters)) < odchstandard*sd(parameters)
 plot(parameters,z1,pch=16,col=md1oind+1)
 title("Punkty oddalone dla parametru")
 dev.off()
   
 #punkty oddalone dla ceny
 png("oddalonecena.png")
-md2oind = abs(prices - mean(prices)) < 3*sd(prices)
+md2oind = abs(prices - mean(prices)) < odchstandard*sd(prices)
 plot(prices,z1,pch=16,col=md2oind+1)
 title("Punkty oddalone dla ceny")
 dev.off()
 
 #usuwanie punktow oddalonych
-parametersboolean = abs(parameters - mean(parameters)) < 3*sd(parameters)
+parametersboolean = abs(parameters - mean(parameters)) < odchstandard*sd(parameters)
 parametersreduced <- parameters[parametersboolean]
 price2 <- prices[parametersboolean]
-pricesboolean = abs(price2 - mean(price2)) < 3*sd(price2)
+pricesboolean = abs(price2 - mean(price2)) < odchstandard*sd(price2)
 pricereduced <- price2[pricesboolean]
 parametersreduced <- parametersreduced[pricesboolean]
 
@@ -109,14 +118,12 @@ dev.off()
 #    }
 #close(myconn)
 rscriptpath <- "C:/Users/Tieburach/PriceAnalysis/raport.Rmd"
-  
 rmarkdown::render(
   rscriptpath,
   output_format = "html_document",
   output_file = "raport.html",
   output_dir = togetherdir,
-  params = list(directory=togetherdir, categorytree = categorytree),
-  encoding="UTF-8"
+  params = list(directory=togetherdir, categorytree = categorytree)
 )
   
 rmarkdown::render(
@@ -124,16 +131,7 @@ rmarkdown::render(
   output_format = "word_document",
   output_file = "raport.docx",
   output_dir = togetherdir,
-  params = list(directory=togetherdir, categorytree = categorytree),
-  encoding="UTF-8"
+  params = list(directory=togetherdir, categorytree = categorytree)
 )
-  
-#sqlQuery(myconn, "DELETE FROM AllegroDatabase.dbo.ProductsPrices")
-#sqlQuery(myconn, "DELETE FROM AllegroDatabase.dbo.Results")
 
-#browseURL(paste('file://', file.path(getwd(),'test.html'), sep=''))
-
-
-
-
-
+browseURL(paste('file://', file.path(getwd(),'raport.html'), sep=''))

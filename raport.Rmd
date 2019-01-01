@@ -12,7 +12,6 @@ params:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-pdf.options(encoding = 'CP1250')
 ```
 
 # 1. Raport z analizy danych z kategorii i w czasie:
@@ -32,7 +31,7 @@ Na ponizszej grafice znajdziemy wykres pokazujacy te punkty:
 ## a) dla parametru
 
 ```{r echo=FALSE}
-  md1oind = abs(parameters - mean(parameters)) < 3*sd(parameters)
+  md1oind = abs(parameters - mean(parameters)) < odchstandard*sd(parameters)
   plot(parameters,z1,pch=16,col=md1oind+1)
   title("Punkty oddalone dla parametru")
 ```
@@ -42,7 +41,7 @@ Na ponizszej grafice znajdziemy wykres pokazujacy te punkty:
 
 ```{r echo=FALSE}
   prices <- auctions[,c("price")]
-  md2oind = abs(prices - mean(prices)) < 3*sd(prices)
+  md2oind = abs(prices - mean(prices)) < odchstandard*sd(prices)
   plot(prices,z1,pch=16,col=md2oind+1)
   title("Punkty oddalone dla parametru")
 ```

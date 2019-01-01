@@ -1,15 +1,17 @@
 package com.example.demo.allegroAPI;
 
 
+import com.example.demo.allegro.*;
 import com.example.demo.model.Auction;
 import com.example.demo.model.Category;
 import com.example.demo.model.SearchDetails;
-import com.example.demo.allegro.*;
 import com.example.demo.repositories.AuctionRepository;
 import com.example.demo.repositories.CategoryRepository;
+import com.example.demo.repositories.ResultsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,13 +24,17 @@ public class ApiHandler {
     CategoryRepository categoryRepository;
 
     private final
+    ResultsRepository resultsRepository;
+
+    private final
     AllegroApiConstants allegroApiConstants = new AllegroApiConstants();
     private ServicePort allegro = allegroApiConstants.getAllegroWebApiService().getServicePort();
 
     @Autowired
-    public ApiHandler(AuctionRepository auctionRepository, CategoryRepository categoryRepository) {
+    public ApiHandler(AuctionRepository auctionRepository, CategoryRepository categoryRepository, ResultsRepository resultsRepository) {
         this.auctionRepository = auctionRepository;
         this.categoryRepository = categoryRepository;
+        this.resultsRepository = resultsRepository;
 
     }
 
@@ -59,6 +65,7 @@ public class ApiHandler {
     public void findAndSave(int categoryId, int parameterId) {
         SearchDetails.setCategoryName(categoryRepository.findById(categoryId).getName());
         List<ItemsListType> list = findByCategory(categoryId);
+        auctionRepository.deleteAll();
         for (ItemsListType item : list) {
             List<ParameterInfoType> parameterinfotype = item.getParametersInfo().getItem();
             ParameterInfoType firstparameter = parameterinfotype.get(parameterId);
@@ -70,6 +77,15 @@ public class ApiHandler {
 
         }
     }
+
+    public List <String> getAuctionUrls(){
+        List <String> adresses = new ArrayList<>();
+        for (int i = 1; i < 4; i++) {
+            adresses.add("https://allegro.pl/oferta/-" + auctionRepository.findByPrice(resultsRepository.findById(i).getPrice()).get(0).getId());
+        }
+        return adresses;
+    }
+
 
     public List<ParameterInfoType> findParametersByCategory(int categoryId) {
         DoGetItemsListRequest itemsreq = new DoGetItemsListRequest();

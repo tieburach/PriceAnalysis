@@ -48,9 +48,18 @@ public class Auction {
         this.name = name;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String toString() {
         return "Auction{" +
+
                 "id=" + id +
                 ", price=" + price +
                 ", firstparametername='" + firstparametername + '\'' +

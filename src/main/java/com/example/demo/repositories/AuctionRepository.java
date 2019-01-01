@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface AuctionRepository extends CrudRepository<Auction, Long> {
 
-    List<Auction> findByPrice(Long price);
+    List<Auction> findByPrice(Float price);
 }

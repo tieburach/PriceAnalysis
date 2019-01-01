@@ -8,11 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 
@@ -27,13 +26,13 @@ public class MainPageController {
     private final
     ApiHandler apiHandler;
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String welcome() {
         return "welcome";
     }
 
-    @RequestMapping("/single")
-    public String single(){
+    @GetMapping("/single")
+    public String single() {
         return "single";
     }
 
@@ -55,17 +54,33 @@ public class MainPageController {
         return "selection";
     }
 
-    @PostMapping(value="/selection")
-    public String showRaport (@ModelAttribute("categoryname") ParameterIndex bean) {
-        apiHandler.findAndSave(SearchDetails.getCategoryNumber(),bean.getParameterindex());
-        Path currentRelativePath = Paths.get("");
-        String s = currentRelativePath.toAbsolutePath().toString();
-        Logger.log("Current relative path is: " + s);
+    @PostMapping("/selection")
+    public String showRaport(@ModelAttribute("categoryname") ParameterIndex bean) {
+        long time1 = System.currentTimeMillis();
+        Logger.log("Rozpoczynam wyszukiwanie danych");
+        apiHandler.findAndSave(SearchDetails.getCategoryNumber(), bean.getParameterindex());
+        Logger.log("Czas trwania wyszukiwania i zapisu danych (w milisekundach): " + (System.currentTimeMillis() - time1));
         try {
-            Runtime.getRuntime().exec("Rscript Script.R " + SearchDetails.getCategoryName());
+            Process p = Runtime.getRuntime().exec("Rscript Script.R " + SearchDetails.getCategoryName());
+            String line;
+            while (p.isAlive()) {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(p.getInputStream()));
+                while ((line = in.readLine()) != null) {
+                    Logger.log(line);
+                }
+                in.close();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.log("Error running system command" + e.getMessage());
         }
-        return "raports";
+
+        return "redirect:raports";
+    }
+
+    @GetMapping("/raports")
+    public void raports(Map<String, Object> model) {
+        List<String> sites = apiHandler.getAuctionUrls();
+        model.put("sites", sites);
     }
 }
