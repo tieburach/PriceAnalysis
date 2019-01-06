@@ -1,6 +1,7 @@
 package com.example.demo.allegroAPI;
 
 
+import com.example.demo.Controller.UserActions;
 import com.example.demo.allegro.*;
 import com.example.demo.model.*;
 import com.example.demo.model.entitites.Auction;
@@ -26,6 +27,7 @@ public class ApiHandler {
     private final ResultsRepository resultsRepository;
     private final HistoryRepository historyRepository;
     private final DetailedauctionRepository detailedauctionRepository;
+    private final UserActions userActions;
 
 
     private final
@@ -33,12 +35,13 @@ public class ApiHandler {
     private ServicePort allegro = allegroApiConstants.getAllegroWebApiService().getServicePort();
 
     @Autowired
-    public ApiHandler(AuctionRepository auctionRepository, CategoryRepository categoryRepository, ResultsRepository resultsRepository, HistoryRepository historyRepository, DetailedauctionRepository detailedauctionRepository) {
+    public ApiHandler(AuctionRepository auctionRepository, CategoryRepository categoryRepository, ResultsRepository resultsRepository, HistoryRepository historyRepository, DetailedauctionRepository detailedauctionRepository, UserActions userActions) {
         this.auctionRepository = auctionRepository;
         this.categoryRepository = categoryRepository;
         this.resultsRepository = resultsRepository;
         this.historyRepository = historyRepository;
         this.detailedauctionRepository = detailedauctionRepository;
+        this.userActions = userActions;
     }
 
     private DoGetItemsListRequest createRequest() {
@@ -196,7 +199,7 @@ public class ApiHandler {
 
     public void saveToSearchHistory(int categoryid, String parameter) {
         historyRepository.save(new History(
-                1L,
+                userActions.getCurrentUserId(),
                 Date.valueOf(LocalDate.now()),
                 Time.valueOf(LocalTime.now()),
                 categoryRepository.findById((long) categoryid).getName(),
@@ -234,7 +237,7 @@ public class ApiHandler {
     }
 
     public Iterable<History> getHistoryOfUser() {
-        return historyRepository.findAll();
+        return historyRepository.findByUserid(userActions.getCurrentUserId());
     }
 }
 

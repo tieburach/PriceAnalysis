@@ -13,14 +13,42 @@ public class Users {
     private Long id;
 
     private String username;
-    private String password;
 
-    public Users(String username, String password) {
+    public String getPassword() {
+        return password;
+    }
+
+    public void setId(Long id) {
+
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
         this.username = username;
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    private String password;
+    private String role;
+
+    public Users(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role = role;
+    }
+
     public Users() {
+    }
+
+    public String getRole() {
+        return role;
     }
 
     public Long getId() {

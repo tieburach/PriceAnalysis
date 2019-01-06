@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.allegroAPI.ApiHandler;
 import com.example.demo.model.*;
 import com.example.demo.model.entitites.History;
+import com.example.demo.model.entitites.Users;
 import com.example.demo.useful.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,17 +21,30 @@ import java.util.Map;
 public class MainPageController {
 
     @Autowired
-    public MainPageController(ApiHandler apiHandler) {
+    public MainPageController(ApiHandler apiHandler, UserActions userActions) {
         this.apiHandler = apiHandler;
+        this.userActions = userActions;
     }
 
     private final
     ApiHandler apiHandler;
+    private final
+    UserActions userActions;
+
 
     @GetMapping("/")
     public String welcome() {
-        //apiHandler.findFirmRaport(,2);
-        return "welcome";
+        return "login";
+    }
+
+    @GetMapping("/login")
+    public String login(){
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String register(){
+        return "register";
     }
 
     @GetMapping("/normal/single")
@@ -80,6 +94,34 @@ public class MainPageController {
         model.put("parameters", avaiableparameters);
         return "firm/selectionfirm";
     }
+
+    @GetMapping("/logout")
+    public String logout(){
+        userActions.setCurrentUserId(0);
+        return "logout";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute("users") Users users){
+        if (userActions.tryToLog(users.getUsername(), users.getPassword())){
+            if(userActions.getCurrentUserRole().equals("single"))
+                return "normal/welcome";
+            else
+                return "firm/welcomefirm";
+        }
+
+        else
+            return "login";
+    }
+
+
+    @PostMapping("/register")
+    public String register(@ModelAttribute("users") Users users){
+        userActions.saveNewUser(users);
+        return "login";
+    }
+
+
 
     @PostMapping("/normal/selection")
     public String showRaport(@ModelAttribute("categoryname") ParameterIndex bean) {

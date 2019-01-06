@@ -15,19 +15,11 @@
     <div class="login-form">
         <div class="main-div">
             <div class="panel">
-                <h2>Formularz logowania</h2>
-                <p>Wprowadź swoją nazwę użytkownika oraz hasło.</p>
+                <h2>Wylogowano poprawnie</h2>
             </div>
-            <form th:action="@{/login}" th:object="${users}" method="post">
-                <div class="form-group">
-                    <input type="email" class="form-control" id="username" name="username" placeholder="Nazwa użytkownika">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control" id="password" name="password" placeholder="Hasło">
-                </div>
-                <button type="submit" class="btn btn-danger btn-block">Zaloguj</button>
+            <form >
                 <div class="forgot">
-                    <a th:href ="@{/register}">Nie masz konta?</a>
+                    <a th:href ="@{/login}">Chcesz zalogowac się jeszcze raz?</a>
                 </div>
             </form>
         </div>

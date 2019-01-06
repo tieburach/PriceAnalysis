@@ -1,10 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
+<!Doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}" href="../static/css/navbar.css"/>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/login.css}"
+          href="../static/css/login.css"/>
+    <!------ Include the above in your HEAD tag ---------->
 </head>
 <body>
-
+<!--<th:block th:include="/navbar"/>-->
+<div class="container">
+    <h1 class="form-heading"></h1>
+    <div class="login-form">
+        <div class="main-div">
+            <div class="panel">
+                <h2>Formularz rejestracji</h2>
+                <p>Wprowadź swoją nazwę użytkownika oraz hasło.</p>
+            </div>
+            <!--/*@thymesVar id="users" type="users"*/-->
+            <form th:action="@{/register}" th:object="${users}" method="post">
+                <div class="form-group">
+                    <input type="email"  class="form-control" id="username" name="username" placeholder="Nazwa użytkownika">
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name ="password" placeholder="Hasło">
+                </div>
+                <div class="form-group">
+                        <input type="radio" id="control_01" name="role" value="single" checked>
+                        <label for="control_01">
+                            Konto indywidualne
+                        </label>
+                        <input type="radio" id="control_02" name="role" value="firm">
+                        <label for="control_02">
+                            Konto firmowe
+                        </label>
+                </div>
+                <button type="submit" class="btn btn-danger btn-block">Zarejestruj się</button>
+                <div class="forgot">
+                    <a th:href ="@{/login}">Masz już konto?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
+<footer>
+    <div class="backgroundgradient footercolor">
+    </div>
+    <div>
+        <img class="imageLogoFirstFooter"
+             src="https://www.ee.pw.edu.pl/wp-content/uploads/2016/11/WE-znak.png"/>
+        <img class="imageLogoSecondFooter"
+             src="https://brandingmonitor.pl/wp-content/uploads/2016/11/podstawowa-wersja-nowego-logo-politechniki-warszawskiej.png"/>
+    </div>
+</footer>
 </html>
