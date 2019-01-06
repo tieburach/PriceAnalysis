@@ -1,0 +1,164 @@
+---
+title: "Raport firmowy"
+output:
+  html_document: default
+  word_document: default
+    
+params:
+    directory:
+        value: x
+    categorytree:
+        value: y
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Raport z analizy danych z kategorii i w czasie:
+
+```{r echo=FALSE}
+params$categorytree
+date()
+
+```
+Zosta³y pobrane wszystkie aukcje z portalu Allegro odpowiadaj¹ce kategorii wybranej przez u¿ytkownika.
+
+
+# 2. Analiza udzia³ów w rynku
+
+Znajdziemy tutaj wykresy dotycz¹ce iloœci aukcji oraz ich wartoœci, pogrupowane na podkategorie znalezione w kategorii g³ównej. Mo¿emy z tego diagramu oceniæ jaki model ma najwiêksz¹ popularnoœæ na portalu Allegro.
+
+
+## a) iloœciowa
+```{r echo=FALSE}
+pie(slices,label = lbls, col=terrain.colors(length(lbls)), cex = 0.8,
+    main="Wykres iloœciowy udzia³ów modeli w rynku")
+
+```
+
+Poza wiedz¹ jaki model ma najwiêksz¹ popularnoœæ mo¿emy utworzyæ wykres zale¿ny nie od iloœci aukcji, a od ³¹cznej kwoty aukcji, który daje nam mo¿liwoœæ ocenienia które z modeli przynosz¹ najwiêkszy dochód.
+
+## b) wartoœciowa
+```{r echo=FALSE}
+pie(slicesprice,labels = lblsprice, col=topo.colors(length(lbls)), cex=0.8, 
+    main="Wykres wartoœciowy udzia³ów modeli w rynku")
+
+```
+
+## c) wartoœæ wszystkich dostêpnych aukcji:
+
+```{r echo=FALSE}
+paste(formatC(as.numeric(allprice), format="f", digits=2, big.mark=","), "z³")
+```
+
+
+
+# 3. Analiza stanu sprzêtów na rynku
+```{r echo=FALSE}
+pie3D(slicesused,labels=lblsused,explode=0, col=terrain.colors(length(lblsused)), theta = pi/4, start = pi/2,
+      main="Wykres popularnoœci nowych i u¿ywanych urz¹dzeñ")
+```
+
+
+# 4. Analiza rodzaju rynku
+
+W tej czêœci mo¿emy dowiedzieæ siê, czy dana kategoria, wybrana przez u¿ytkownika, nale¿y do rynku wolnokonkurencyjnego, oligopolistycznego czy monopolistycznego. 
+
+## a) stosunek iloœciowy sprzedawców do osób prywatnych
+```{r echo= FALSE}
+pie3D(slicesSellers,labels=lblsSellers,explode=0, col=terrain.colors(length(lblsSellers)), theta = pi/4, start = pi,
+      main="Wykres stosunku sprzedawców do osób prywatnych")
+```
+
+## b) stosunek iloœciowy aukcji sprzedawców do osób prywatnych
+```{r echo=FALSE}
+pie3D(slicesSellersAuctions,labels=lblsSellersAuctions,explode=0, col=terrain.colors(length(lblsSellersAuctions)), theta = pi/4, start = pi,
+      main="Wykres stosunku iloœci przedmiotów sprzedawców do osób prywatnych")
+```
+
+Najwiêksi sprzedawcy wraz z iloœciami aukcji wystawionymi przez tych sprzedawców w kategorii wybranej przez u¿ytkownika daje nam informacjê jak du¿e s¹ firmy dzia³aj¹ce na allegro w danej kategorii.
+
+## c) najwiêksi sprzedawcy i iloœæ aukcji
+```{r echo=FALSE}
+barplot(biggestSellers[,c("counted")],
+        main = "Najwiêksi sprzedawcy",
+        xlab = "Nazwy u¿ytkowników",
+        ylab = "Iloœæ ofert",
+        names.arg = biggestSellers[,c("username")],
+        col=terrain.colors(length(biggestSellers[,c("username")])),
+        cex.names = 0.5)
+```
+
+# 5. Analiza poszczególnych podgrup:
+
+W tej czêœci analizujemy ka¿d¹ wystêpuj¹ca podkategoriê (ró¿ne modele produktu), tak aby otrzymaæ informacjê na jak¹ wersjê modelu (z jak¹ wartoœci¹ parametru, zdefiniowanego przez u¿ytkownika) jest najwiêksze zapotrzebowanie oraz jakie s¹ œrednie ceny tych wersji. Poza tym mamy mo¿liwoœæ ogólnego spojrzenie na histogramy cenowe, które pozwalaj¹ u¿ytkownikowi orientowaæ siê w najpopularniejszych zakresach cenowych. Wszystkie analizy s¹ prowadzone na danych ju¿ oczyszczonych (usuniête punkty oddalone) oraz zak³adaj¹c stan produktu na "Nowy".
+
+
+
+```{r echo=FALSE}
+for (object in avaiablecategories$categoryname) {
+  print(object) 
+  #piechart ile jest wersji 16 a ile 32 gb
+  query <- paste("SELECT * FROM detailedauction WHERE categoryname ='",object,"' AND condition='new'", sep="")
+  singlecategory <- dbGetQuery(con, query)
+  query <- paste(" SELECT COUNT(id), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
+                 object,"' AND condition='new')as t GROUP BY t.parametervalue",sep="")
+  differentVersion <- dbGetQuery(con, query)
+  parameterUnit <- dbGetQuery(con, "SELECT parameterunit FROM detailedauction LIMIT 1")
+  parameterUnit <- parameterUnit[,c("parameterunit")]
+  slicesVersion <- differentVersion[,c("count")]
+  lblsVersion <- differentVersion[,c("parametervalue")]
+  pctVersion <- round(slicesVersion / sum(slicesVersion) * 100)
+  lblsVersion <-
+    paste(lblsVersion, "GB - ", pctVersion) # add percents to labels
+  lblsVersion <- paste(lblsVersion, " %", sep = "") # ad % to labels
+  titleGraph <- paste("Procentowy udzia³ ró¿nych wersji parametrów dla ", object, sep = "")
+  pie3D(
+    slicesVersion,
+    labels = lblsVersion,
+    explode = 0,
+    col = terrain.colors(length(lblsVersion)),
+    theta = pi / 4,
+    start = pi,
+    main = titleGraph
+  )
+  
+  #barchart dla wersji i ceny sredniej
+    query <- paste(" SELECT AVG(price), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
+                   object,"' AND condition='new')as t GROUP BY t.parametervalue",sep="")
+    differentPrices <- dbGetQuery(con, query)
+    lblsPrices <- differentPrices[,c("parametervalue")]
+    differentPrices <- differentPrices[,c("avg")]
+    lblsPrices <- paste(lblsPrices, " GB")
+    titlePrices <- paste("Œrednie ceny wersji zale¿ne od parametru ", object, sep = "")
+    my_bar = barplot(
+      differentPrices,
+      main = titlePrices,
+      xlab = "Rodzaje",
+      ylab = "Cena",
+      names.arg = lblsPrices,
+      col = terrain.colors(length(differentPrices)),
+      cex.names = 1
+    )
+    text(my_bar, differentPrices-differentPrices/2 , paste(formatC(as.numeric(differentPrices), format="f", digits=2, big.mark=","), " z³", sep="") ,cex=1)
+    
+    library(ggplot2)
+    
+    query <- paste("SELECT price FROM detailedauction WHERE categoryname ='",object,"' AND condition='new'", sep="")
+    pricesForSingle <- dbGetQuery(con, query)
+    pricesboolean = abs(pricesForSingle$price - mean(pricesForSingle$price)) < 2 * sd(pricesForSingle$price)
+    pricereduced <- pricesForSingle$price[pricesboolean]
+    pricereduced <- data.frame(pricereduced)
+    titlePricesHist <- paste("Histogram ceny dla ", object, sep = "")
+    plot <- ggplot(pricereduced, aes(x=pricereduced)) + geom_histogram(bins = 20, colour="white", fill=topo.colors(20)) + ggtitle(titlePricesHist) + xlab("Cena (z³)") + ylab("Iloœæ")
+    
+    print(plot)
+}
+
+```
+
+
+
+
+

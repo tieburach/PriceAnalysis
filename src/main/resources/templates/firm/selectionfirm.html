@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<th:block th:include="/navbar"></th:block>
+
+
+<div class="center">
+    <div class="centerText"> Wybierz parametr:</div>
+        <form th:action="@{/firm/selectionfirm}" th:object="${parameterIndex}" method="post">
+            <div class="centerText4">
+                <select name="parameterindex" id="parameterindex" title="paramaterSelect">
+                    <!--/*@thymesVar id="parameters" type="parameter"*/-->
+                    <option type="text" th:each="parameter : ${parameters}"
+                            th:value="${parameter.index}"
+                            th:text="${parameter.name}">
+                    </option>
+                </select>
+            </div>
+            <div class="starter-template centerText3">
+                <button type="submit" class="btn btn-danger btn-lg">Zatwierdź parametr</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<footer>
+    <div class="backgroundgradient footercolor">
+    </div>
+    <div>
+        <img class="imageLogoFirstFooter"
+             src="https://www.ee.pw.edu.pl/wp-content/uploads/2016/11/WE-znak.png"/>
+        <img class="imageLogoSecondFooter"
+             src="https://brandingmonitor.pl/wp-content/uploads/2016/11/podstawowa-wersja-nowego-logo-politechniki-warszawskiej.png"/>
+    </div>
+</footer>
+</html>

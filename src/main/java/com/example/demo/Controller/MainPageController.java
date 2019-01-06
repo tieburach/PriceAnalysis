@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.allegroAPI.ApiHandler;
 import com.example.demo.model.*;
+import com.example.demo.model.entitites.History;
 import com.example.demo.useful.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,15 +29,23 @@ public class MainPageController {
 
     @GetMapping("/")
     public String welcome() {
+        //apiHandler.findFirmRaport(,2);
         return "welcome";
     }
 
-    @GetMapping("/single")
+    @GetMapping("/normal/single")
     public String single() {
-        return "single";
+        return "normal/single";
     }
 
-    @PostMapping("/single")
+
+    @GetMapping("/firm/firmsingle")
+    public String firmsingle() {
+        return "firm/firmsingle";
+    }
+
+
+    @PostMapping("/normal/single")
     public String showPage(@ModelAttribute("categoryText") CategoryText bean) {
         SearchDetails.setCategoryNumber(bean.getCategoryNumber());
         AvaiableParameters.setParameterList(apiHandler.findParametersByCategory(bean.getCategoryNumber()));
@@ -47,17 +56,36 @@ public class MainPageController {
         return "redirect:selection";
     }
 
-    @GetMapping("/selection")
+    @PostMapping("/firm/firmsingle")
+    public String showPageFirm(@ModelAttribute("categoryText") CategoryText bean) {
+        SearchDetails.setCategoryNumber(bean.getCategoryNumber());
+        AvaiableParameters.setParameterList(apiHandler.findParametersByCategory(bean.getCategoryNumber()));
+        Logger.log("Dostepne parametry:");
+        for (Parameter string : AvaiableParameters.getParameterList()) {
+            Logger.log(string.getName());
+        }
+        return "redirect:selectionfirm";
+    }
+
+    @GetMapping("/normal/selection")
     public String selectFirstParameter(Map<String, Object> model) {
         List<Parameter> avaiableparameters = AvaiableParameters.getParameterList();
         model.put("parameters", avaiableparameters);
-        return "selection";
+        return "normal/selection";
     }
 
-    @PostMapping("/selection")
+    @GetMapping("/firm/selectionfirm")
+    public String selectFirstParameterFirm(Map<String, Object> model) {
+        List<Parameter> avaiableparameters = AvaiableParameters.getParameterList();
+        model.put("parameters", avaiableparameters);
+        return "firm/selectionfirm";
+    }
+
+    @PostMapping("/normal/selection")
     public String showRaport(@ModelAttribute("categoryname") ParameterIndex bean) {
         long time1 = System.currentTimeMillis();
         Logger.log("Rozpoczynam wyszukiwanie danych");
+        apiHandler.saveToSearchHistory(SearchDetails.getCategoryNumber(), bean.getParameterindex() + "");
         apiHandler.findAndSave(SearchDetails.getCategoryNumber(), bean.getParameterindex());
         Logger.log("Czas trwania wyszukiwania i zapisu danych (w milisekundach): " + (System.currentTimeMillis() - time1));
         try {
@@ -78,9 +106,49 @@ public class MainPageController {
         return "redirect:raports";
     }
 
-    @GetMapping("/raports")
+
+    @PostMapping("/firm/selectionfirm")
+    public String showRaportFirm(@ModelAttribute("categoryname") ParameterIndex bean) {
+        long time1 = System.currentTimeMillis();
+        Logger.log("Rozpoczynam wyszukiwanie danych");
+        apiHandler.saveToSearchHistory(SearchDetails.getCategoryNumber(), bean.getParameterindex() + "");
+        apiHandler.findFirmRaport(SearchDetails.getCategoryNumber(), bean.getParameterindex());
+        Logger.log("Czas trwania wyszukiwania i zapisu danych (w milisekundach): " + (System.currentTimeMillis() - time1));
+        try {
+            Process p = Runtime.getRuntime().exec("Rscript ScriptFirm.R " + SearchDetails.getCategoryName());
+            String line;
+            while (p.isAlive()) {
+                BufferedReader in = new BufferedReader(
+                        new InputStreamReader(p.getInputStream()));
+                while ((line = in.readLine()) != null) {
+                    Logger.log(line);
+                }
+                in.close();
+            }
+        } catch (IOException e) {
+            Logger.log("Error running system command" + e.getMessage());
+        }
+
+        return "redirect:raportsfirm";
+    }
+
+
+    @GetMapping("/normal/raports")
     public void raports(Map<String, Object> model) {
         List<String> sites = apiHandler.getAuctionUrls();
         model.put("sites", sites);
+    }
+
+
+    @GetMapping("/firm/raportsfirm")
+    public void raportsFirm() {
+
+    }
+
+    @GetMapping("/history")
+    public String showHistory(Map<String, Object> model){
+        List<History> searches = (List<History>) apiHandler.getHistoryOfUser();
+        model.put("searches", searches);
+        return "history";
     }
 }

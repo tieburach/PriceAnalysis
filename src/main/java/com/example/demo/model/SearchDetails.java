@@ -29,4 +29,6 @@ public class SearchDetails {
     public static void setParameterIndex(int parameterIndex) {
         SearchDetails.parameterIndex = parameterIndex;
     }
+
+
 }

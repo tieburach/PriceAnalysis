@@ -43,32 +43,33 @@ Na ponizszej grafice znajdziemy wykres pokazujacy te punkty:
   prices <- auctions[,c("price")]
   md2oind = abs(prices - mean(prices)) < odchstandard*sd(prices)
   plot(prices,z1,pch=16,col=md2oind+1)
-  title("Punkty oddalone dla parametru")
+  title("Punkty oddalone dla ceny")
 ```
 
 
 # 3. Histogramy, tablice rozkladu wystapien
 ## a) dla ceny, przed transformacja
 ```{r echo=FALSE}
-  hist(prices)
+  ggplot(pricesdataframe, aes(x=prices)) + geom_histogram(bins = 20, colour="white", fill=rainbow(20, start=.8, end=.2))
 ```
 
 ## b) dla ceny, po transformacji
 
 ```{r echo=FALSE}
-  hist(pricereduced)
+  ggplot(pricesreduceddataframe, aes(x=pricereduced)) + geom_histogram(bins = 20, colour="white", fill=rainbow(20, start=.8, end=.2))
 ```
 
 ## c) dla parametrów przed transformacja
 
 ```{r echo=FALSE}
-hist (parameters)
+  ggplot(parametersdataframe, aes(x=parameters)) + geom_histogram(bins = 5, colour="white", fill=rainbow(5, start=.8, end=.2))
+
 ```
 
 ## d) dla parametrów po transformacji
 
 ```{r echo=FALSE}
-hist (parametersreduced)
+  ggplot(parametersreduceddataframe, aes(x=parametersreduced)) + geom_histogram(bins = 5, colour="white", fill=rainbow(5, start=.8, end=.2))
 ```
 
 

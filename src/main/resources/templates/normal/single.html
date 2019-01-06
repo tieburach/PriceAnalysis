@@ -14,20 +14,23 @@
 </head>
 <body>
 
-<th:block th:include="/navbar"></th:block>
+<th:block th:include="/navbar"/>
 
-<div>
-    <div class="center">
-        <form th:action="@{/single}" th:object="${categoryText}" method="post">
-            <div class="centerText4">
-                <input type="text" id="categoryNumber" name="categoryNumber"/>
-            </div>
-            <div class="starter-template centerText3">
-                <button type="submit" class="btn btn-danger btn-lg">Zatwierdź kategorię</button>
-            </div>
-        </form>
+
+<div class="center">
+    <div class="centerText">
+        Wpisz numer kategorii:
     </div>
+    <form th:action="@{/normal/single}" th:object="${categoryText}" method="post">
+        <div class="centerText4">
+            <input type="text" id="categoryNumber" name="categoryNumber"/>
+        </div>
+        <div class="starter-template centerText3">
+            <button type="submit" class="btn btn-danger btn-lg">Zatwierdź kategorię</button>
+        </div>
+    </form>
 </div>
+
 </body>
 <footer>
     <div class="backgroundgradient footercolor">

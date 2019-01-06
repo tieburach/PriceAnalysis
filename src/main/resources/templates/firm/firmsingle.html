@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/navbar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/navbar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/navbar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/navbar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/navbar.css"/>
+    <link rel="stylesheet" type="text/css" href="src/main/resources/static/css/bootstrap.min.css"/>
+    <title>Spring Boot Thymeleaf Hello World Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css"/>
+</head>
+<body>
+
+<th:block th:include="/navbar"></th:block>
+
+
+<div class="center">
+    <div class="centerText">
+        Wpisz numer kategorii:
+    </div>
+    <form th:action="@{/firm/firmsingle}" th:object="${categoryText}" method="post">
+        <div class="centerText4">
+            <input type="text" id="categoryNumber" name="categoryNumber"/>
+        </div>
+        <div class="starter-template centerText3">
+            <button type="submit" class="btn btn-danger btn-lg">Zatwierdź kategorię</button>
+        </div>
+    </form>
+</div>
+
+</body>
+<footer>
+    <div class="backgroundgradient footercolor">
+    </div>
+    <div>
+        <img class="imageLogoFirstFooter"
+             src="https://www.ee.pw.edu.pl/wp-content/uploads/2016/11/WE-znak.png"/>
+        <img class="imageLogoSecondFooter"
+             src="https://brandingmonitor.pl/wp-content/uploads/2016/11/podstawowa-wersja-nowego-logo-politechniki-warszawskiej.png"/>
+    </div>
+</footer>
+</html>

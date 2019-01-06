@@ -30,16 +30,14 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active"><a th:href="@{/}">Home <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Historia wyszukiwań</a></li>
+                    <li><a th:href="@{/history}" >Historia wyszukiwań</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                            aria-expanded="false">Raport <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a th:href="@{/single}" >Indywidualny po jednym parametrze</a></li>
-                            <li><a href="#">Indywidualny po dwóch parametrach</a></li>
+                            <li><a th:href="@{/normal/single}" >Indywidualny po parametrze</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="#">Firmowy po jednej kategorii </a></li>
-                            <li><a href="#">Firmowy po dwóch kategoriach</a></li>
+                            <li><a th:href="@{/firm/firmsingle}">Firmowy po kategorii </a></li>
                         </ul>
                     </li>
                 </ul>
@@ -62,7 +60,7 @@
     </nav>
 </div>
 </body>
-<div class="copyright">© 2018 Copyright:
+<div class="copyright">© 2019 Copyright:
     <a href="https://github.com/tieburach"> Witalis Kinasz</a>
 </div>
 </footer>

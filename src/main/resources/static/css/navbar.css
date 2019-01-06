@@ -108,30 +108,11 @@
     bottom: 5%;
 }
 
-.centerText{
-    font-weight: bolder;
-    text-align: center;
-    position: relative;
-    top:20%;
-}
 
-.centerText2{
-    font-family: Calibri;
-    text-align: center;
-    position:relative;
-    top:30%;
-}
-
-.centerText3{
-    position:absolute;
-    top:60%;
-    left: 46%;
-}
 
 .hyperlinks:hover {
     font-size: 30px;
     color: black;
-
 }
 
 .hyperlinks{
@@ -186,14 +167,78 @@ footer {
 }
 
 .copyright{
-    font-size: 20px;
+    bottom: 0;
+    font-size: 17px;
     position: absolute;
-    bottom: 0%;
-    left: 40%;
+    left: 42%;
+}
+.centerText{
+    font-weight: bolder;
+    left: 41%;
+    position: relative;
+    top:20%;
+    width: 50%;
+    margin: 15px;
+}
+
+.centerText2{
+    font-family: Calibri;
+    text-align: center;
+    position:relative;
+    top:30%;
+}
+
+.centerText3{
+    position: absolute;
+    top: 60%;
+    left: 44%;
 }
 
 .centerText4 {
     position:absolute;
     top:40%;
-    left: 42%;
+    left: 41%;
+    line-height: 1;
+}
+
+table{
+    width:100%;
+    table-layout: fixed;
+}
+.tbl-header{
+    background-color: rgba(255,255,255,0.3);
+    text-align: center;
+    margin: 10px;
+}
+.tbl-content{
+    height:300px;
+    overflow-x:auto;
+    margin-top: 0;
+    border: 1px solid rgba(255,255,255,0.3);
+}
+
+.tha{
+    text-align: center;
+    padding: 10px 20px 20px;
+    font-weight: 800;
+    font-size: 22px;
+    color: #3c3c4c;
+}
+
+td{
+    padding: 15px;
+    text-align: center;
+    vertical-align:middle;
+    font-weight: 300;
+    font-size: 20px;
+    color: black;
+    border-bottom: solid 10px rgba(255,255,255,0.1);
+}
+
+.h1z{
+    font-size: 35px;
+    color: #3c3c4c;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
 }
