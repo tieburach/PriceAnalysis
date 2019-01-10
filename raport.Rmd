@@ -72,18 +72,6 @@ Na ponizszej grafice znajdziemy wykres pokazujacy te punkty:
   ggplot(parametersreduceddataframe, aes(x=parametersreduced)) + geom_histogram(bins = 5, colour="white", fill=rainbow(5, start=.8, end=.2))
 ```
 
-
-# 4. Grupowanie danych
-
-Grupowanie danych przebiegalo za pomoca metody k-srednich, sluzy znalezieniu grup potencjalnej konkurencji w sprzedazy, jak i ogólnemu zarysowaniu rynku i licznosci grup.
-
-```{r echo=FALSE}
-  par(mfcol=c(1,1))
-  auctionsreduced<- data.frame(pricereduced, parametersreduced)
-  g <-grupuj("ksrednich",auctionsreduced,4,c(2,1),1)
-  
-```
-
 # 5. Selekcja cen potencjalnych
 
 Na ponizszym wykresie znajdziemy rozklad normalny po transformacji oraz zaznaczone punkty, które zostaly wyliczone jako wartosci potencjalnie istotne dla uzytkownika.

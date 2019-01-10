@@ -52,6 +52,22 @@ public class MainPageController {
         return "normal/single";
     }
 
+    @GetMapping("/normal/welcome")
+    public String welcomeSingle() {
+        return "normal/welcome";
+    }
+
+    @GetMapping("/firm/welcomefirm")
+    public String welcomeFirm() {
+        return "firm/welcomefirm";
+    }
+
+
+
+
+
+
+
 
     @GetMapping("/firm/firmsingle")
     public String firmsingle() {
@@ -105,9 +121,9 @@ public class MainPageController {
     public String login(@ModelAttribute("users") Users users){
         if (userActions.tryToLog(users.getUsername(), users.getPassword())){
             if(userActions.getCurrentUserRole().equals("single"))
-                return "normal/welcome";
+                return "redirect:normal/welcome";
             else
-                return "firm/welcomefirm";
+                return "redirect:firm/welcomefirm";
         }
 
         else

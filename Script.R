@@ -31,9 +31,9 @@ parameters <- auctions[, c("firstparametervalue")]
 dbSendQuery(con, "DELETE FROM results")
 prices <- sort (prices)
 y <- dnorm(prices, mean = mean(prices), sd = sd(prices))
-cenamin <- mean(prices) - sd(prices)
+cenamin <- mean(prices) - sd(prices)/2
 cenaavg <- mean(prices)
-cenamax <- mean(prices) + sd(prices)
+cenamax <- mean(prices) + sd(prices)/2
 
 
 
@@ -150,16 +150,6 @@ png("histogramparametru.png")
 par(mfcol = c(1, 2))
 ggplot(parametersdataframe, aes(x=parameters)) + geom_histogram(bins = 5, colour="white", fill=rainbow(5, start=.8, end=.2))
 ggplot(parametersreduceddataframe, aes(x=parametersreduced)) + geom_histogram(bins = 5, colour="white", fill=rainbow(5, start=.8, end=.2))
-dev.off()
-
-
-
-#grupowanie poszczegolnych elementow
-png("grupowanie.png")
-par(mfcol = c(1, 1))
-auctionsreduced <- data.frame(pricereduced, parametersreduced)
-g <- grupuj("ksrednich", auctionsreduced, 4, c(2, 1), 1)
-title("Grupowanie wystąpień")
 dev.off()
 
 

@@ -126,12 +126,16 @@ for (object in avaiablecategories$categoryname) {
   
   #barchart dla wersji i ceny sredniej
     query <- paste(" SELECT AVG(price), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
-                   object,"' AND condition='new')as t GROUP BY t.parametervalue",sep="")
+                   object,"' AND condition='new')as t GROUP BY t.parametervalue ORDER BY t.parametervalue",sep="")
     differentPrices <- dbGetQuery(con, query)
+    query <- paste(" SELECT stddev(price), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
+                   object,"' AND condition='new')as t GROUP BY t.parametervalue ORDER BY t.parametervalue",sep="")
+    differentPricesOdchylenie <- dbGetQuery(con, query)
+    differentPricesOdchylenie <- differentPricesOdchylenie[,c("stddev")]
     lblsPrices <- differentPrices[,c("parametervalue")]
     differentPrices <- differentPrices[,c("avg")]
     lblsPrices <- paste(lblsPrices, " GB")
-    titlePrices <- paste("Œrednie ceny wersji zale¿ne od parametru ", object, sep = "")
+    titlePrices <- paste("Œrednie ceny wersji z parametrami dla ", object, sep = "")
     my_bar = barplot(
       differentPrices,
       main = titlePrices,
@@ -141,10 +145,13 @@ for (object in avaiablecategories$categoryname) {
       col = terrain.colors(length(differentPrices)),
       cex.names = 1
     )
-    text(my_bar, differentPrices-differentPrices/2 , paste(formatC(as.numeric(differentPrices), format="f", digits=2, big.mark=","), " z³", sep="") ,cex=1)
+    text(my_bar, differentPrices * 0.9, "Cena œrednia:", cex=0.8)
+    text(my_bar, differentPrices * 0.7 , paste(formatC(as.numeric(differentPrices), format="f", digits=2, big.mark=","), " z³", sep="") ,cex=0.8)
+    text(my_bar, differentPrices * 0.5, "Zakres:", cex = 0.8)
+    text(my_bar, differentPrices * 0.3 , paste("< " , formatC(as.numeric(differentPrices-differentPricesOdchylenie), format="f", digits=2, big.mark=","), " z³ , ", sep="") ,cex=0.8)
+    text(my_bar, differentPrices * 0.1, paste(formatC(as.numeric(differentPrices+differentPricesOdchylenie), format="f", digits=2, big.mark=","), " z³ >", sep="") ,cex=0.8)
     
     library(ggplot2)
-    
     query <- paste("SELECT price FROM detailedauction WHERE categoryname ='",object,"' AND condition='new'", sep="")
     pricesForSingle <- dbGetQuery(con, query)
     pricesboolean = abs(pricesForSingle$price - mean(pricesForSingle$price)) < 2 * sd(pricesForSingle$price)

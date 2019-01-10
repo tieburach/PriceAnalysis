@@ -259,8 +259,11 @@
     #barchart dla roznych wersji gb ile kwota srednia
     query <- paste(" SELECT AVG(price), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
                    object,"' AND condition='new')as t GROUP BY t.parametervalue ORDER BY t.parametervalue",sep="")
-    query
     differentPrices <- dbGetQuery(con, query)
+    query <- paste(" SELECT stddev(price), t.parametervalue FROM (SELECT * FROM detailedauction WHERE categoryname ='", 
+                   object,"' AND condition='new')as t GROUP BY t.parametervalue ORDER BY t.parametervalue",sep="")
+    differentPricesOdchylenie <- dbGetQuery(con, query)
+    differentPricesOdchylenie <- differentPricesOdchylenie[,c("stddev")]
     lblsPrices <- differentPrices[,c("parametervalue")]
     differentPrices <- differentPrices[,c("avg")]
     lblsPrices <- paste(lblsPrices, " GB")
@@ -275,7 +278,11 @@
       col = terrain.colors(length(differentPrices)),
       cex.names = 1
     )
-    text(my_bar, differentPrices-differentPrices/2 , paste(formatC(as.numeric(differentPrices), format="f", digits=2, big.mark=","), " z³", sep="") ,cex=1)
+    text(my_bar, differentPrices * 0.9, "Cena œrednia:", cex=0.8)
+    text(my_bar, differentPrices * 0.7 , paste(formatC(as.numeric(differentPrices), format="f", digits=2, big.mark=","), " z³", sep="") ,cex=0.8)
+    text(my_bar, differentPrices * 0.5, "Zakres:", cex = 0.8)
+    text(my_bar, differentPrices * 0.3 , paste("< " , formatC(as.numeric(differentPrices-differentPricesOdchylenie), format="f", digits=2, big.mark=","), " z³ , ", sep="") ,cex=0.8)
+    text(my_bar, differentPrices * 0.1, paste(formatC(as.numeric(differentPrices+differentPricesOdchylenie), format="f", digits=2, big.mark=","), " z³ >", sep="") ,cex=0.8)
     dev.off()
     
     
